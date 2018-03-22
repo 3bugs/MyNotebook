@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent i = new Intent(getApplicationContext(), NoteListActivity.class);
                     startActivity(i);
-                    
+
                 } else {
                     Toast t = Toast.makeText(
                             getApplicationContext(),
