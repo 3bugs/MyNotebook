@@ -1,6 +1,8 @@
 package com.example.mynotebook;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.mynotebook.db.DatabaseHelper;
 import com.example.mynotebook.model.NoteItem;
 
 import java.util.ArrayList;
@@ -22,17 +25,7 @@ public class NoteListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_list);
 
-        NoteItem item = new NoteItem(
-                "เลขเด็ดงวดนี้",
-                "บน 12, ล่าง 34"
-        );
-        mNoteList.add(item);
-
-        item = new NoteItem(
-                "aaa",
-                "bbb"
-        );
-        mNoteList.add(item);
+        loadDataFromDatabase();
 
         ArrayAdapter adapter = new ArrayAdapter<>(
                 this,
@@ -55,5 +48,29 @@ public class NoteListActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    private void loadDataFromDatabase() {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_NOTEBOOK,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(cursor.getColumnIndex(DatabaseHelper.COL_ID));
+            String title = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_TITLE));
+            String details = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_DETAILS));
+
+            NoteItem noteItem = new NoteItem(title, details);
+            mNoteList.add(noteItem);
+        }
     }
 }

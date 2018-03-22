@@ -1,5 +1,6 @@
 package com.example.mynotebook.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_TITLE = "title";
     public static final String COL_DETAILS = "details";
 
-    private static final String SQL_CREATE_TABLE_NOTEBOOK = "CREATE " + TABLE_NOTEBOOK + "("
+    private static final String SQL_CREATE_TABLE_NOTEBOOK = "CREATE TABLE " + TABLE_NOTEBOOK + "("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_TITLE + " TEXT,"
             + COL_DETAILS + " TEXT"
@@ -31,10 +32,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE_NOTEBOOK);
+        insertInitialData(db);
+    }
+
+    private void insertInitialData(SQLiteDatabase db) {
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TITLE, "เลขเด็ดงวดนี้");
+        cv.put(COL_DETAILS, "บน 12, ล่าง 34");
+        db.insert(TABLE_NOTEBOOK, null, cv);
+
+        cv = new ContentValues();
+        cv.put(COL_TITLE, "เรียนแอนดรอยด์");
+        cv.put(COL_DETAILS, "20-22 มี.ค. 61");
+        db.insert(TABLE_NOTEBOOK, null, cv);
+
+        cv = new ContentValues();
+        cv.put(COL_TITLE, "abc");
+        cv.put(COL_DETAILS, "xyz");
+        db.insert(TABLE_NOTEBOOK, null, cv);
+
+        cv = new ContentValues();
+        cv.put(COL_TITLE, "test title");
+        cv.put(COL_DETAILS, "test details");
+        db.insert(TABLE_NOTEBOOK, null, cv);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        
+
     }
 }
